@@ -1,4 +1,4 @@
-# Anime RAG with MyAnimeList API
+# Anime RAG with Jikan API
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
