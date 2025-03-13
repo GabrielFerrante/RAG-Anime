@@ -1,3 +1,5 @@
 *.json
 *.pyc
+*.faiss
+*.pkl
 __pycache__

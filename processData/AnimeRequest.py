@@ -8,7 +8,7 @@ import pandas as pd
 ENDPOINT_BASE = 'https://api.jikan.moe/v4/anime'
 
 
-def generateDataFrame(jsonName):
+def generateDataFrameAnimes(jsonName):
     # Carregar dados do JSON
     data = json.load(open(jsonName))
 
@@ -17,10 +17,44 @@ def generateDataFrame(jsonName):
     colectionDF = []
 
     for i in range(1, 214):
-        df = pd.DataFrame(data[str(i)]['data'])
+        df = pd.json_normalize(data[str(i)]['data'])
         colectionDF.append(df)
     
     return colectionDF
+
+def generateDataFramePersonagens(jsonName):
+
+    characters = []
+    colectionDF = []
+    # Carregar dados do JSON
+    data = json.load(open(jsonName))
+    characters.append(data)
+    ids = characters[0].keys()
+    print(ids)
+        # Converter para DataFrame (para facilitar o processamento)
+    for id in ids:
+        if 'data' in characters[0][id]:
+            
+            df = pd.json_normalize(characters[0][id]['data'])
+            colectionDF.append(df)
+        else:
+            continue
+        
+        
+    return colectionDF
+
+def generateDataFrameEpisodios(jsonName):
+    data = json.load(open(jsonName))
+    idsAnimes = data.keys()
+    df = []
+    for key in data.keys():
+        temp = pd.DataFrame(data[key])
+        temp = temp.transpose()
+        df.append(temp)
+        
+        #df[key] = pd.json_normalize(df[key])
+    return df, idsAnimes
+
 
 def getAnimes():
     endpoint = ENDPOINT_BASE
@@ -36,7 +70,7 @@ def getAnimes():
     
 
 def getPersonagensAnimes():
-    df = generateDataFrame('C:/Repositorios/RAG-Anime/dados/animes.json')
+    df = generateDataFrameAnimes('C:/Repositorios/RAG-Anime/dados/animes.json')
     for i in range(0,214): #numero de paginas  
 
         ids = df[i].filter(items=['mal_id'])
@@ -56,7 +90,7 @@ def getEpisodiosAnimes():
     # https://api.jikan.moe/v4/anime/{id}/episodes/{episode}
 
     # Gere o DataFrame usando a função generateDataFrame
-    df = generateDataFrame('C:/Repositorios/RAG-Anime/dados/animes.json')
+    df = generateDataFrameAnimes('C:/Repositorios/RAG-Anime/dados/animes.json')
   
     for i in range(0,214):
         dados = df[i].filter(items=['mal_id', 'episodes'])
@@ -73,6 +107,3 @@ def getEpisodiosAnimes():
                 with open(f'C:/Repositorios/RAG-Anime/dados/episodios-Anime{id}.json', 'w') as jsonfile:
                     json.dump(episodioAnime, jsonfile, indent=4)
                 break
-                    
-
-getEpisodiosAnimes()

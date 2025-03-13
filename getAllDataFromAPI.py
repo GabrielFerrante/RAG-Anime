@@ -8,5 +8,6 @@ def main():
     getPersonagensAnimes()
     print('Adquirindo listas de episódios')
     getEpisodiosAnimes()
+    print('Lendo o mangá One Piece')
 
 main()
